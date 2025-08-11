@@ -46,6 +46,16 @@
             outline-offset: 2px;
             box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.6); /* blue-500相当 */
         }
+        /* 入力エラー時のシェイクアニメーション */
+        @keyframes shake {
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
+        .animate-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-300">
@@ -112,10 +122,10 @@
                 </div>
             </section>
 
-            <hr class="border-slate-700/80">
-
+            
             <!-- Step 3: Output -->
             <section id="output-section" class="hidden">
+                 <hr class="border-slate-700/80 my-8">
                 <div class="flex items-start gap-4 sm:gap-6">
                     <div class="flex-shrink-0 border-2 border-blue-500/50 text-blue-400 rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg shadow-inner shadow-blue-900/50">3</div>
                     <div>
@@ -150,7 +160,6 @@
         // FIX: The backticks (`) inside the template literal were not escaped, causing a JavaScript syntax error.
         // I have escaped them with a backslash (\`) so the script can parse correctly.
         const promptTemplate = `
-
 # 役割 (Role)
 あなたは、世界トップクラスのスタートアップアナリスト兼マーケットリサーチャーです。あなたの使命は、提示された社会問題が、スタートアップとして取り組むに値するビジネスチャンスとなり得るかを、客観的かつ厳密に評価することです。社会的意義だけでなく、事業としての持続可能性と成長性を重視した、鋭い洞察を提供してください。
 
@@ -190,7 +199,7 @@
 日本の65歳以上の高齢者人口は約3,621万人（2023年、総務省統計局）に達し、巨大な市場を形成しています。特に、健康で活動的な「アクティブシニア」層は、生涯学習や社会参加への意欲が高く、関連市場は拡大傾向にあります。また、株式会社矢野経済研究所の調査によると、国内のスキルシェア（CtoC）市場は2028年度に4,788億円に達すると予測されています。この成長市場に「世代間交流」という新たな付加価値を組み合わせることで、既存のスキルシェアサービスとの差別化を図り、大きな成長ポテンシャルが見込めます。
 
 ## スタートアップとしての事業立ち上げ評価
-**評価： ⚪︎/10**
+**評価： 8/10**
 **結論： 絶対に取り組むべき**
 
 ## 評価基準
@@ -209,13 +218,13 @@
 
 # 出力形式 (Format)
 - 以下の4つの見出しをマークダウン形式（##）で必ず使用してください。
-    - `## ペインの深さ`
-    - `## 市場規模・成長性`
-    - `## スタートアップとしての事業立ち上げ評価`
-    - `## 評価基準`
+    - \`## ペインの深さ\`
+    - \`## 市場規模・成長性\`
+    - \`## スタートアップとしての事業立ち上げ評価\`
+    - \`## 評価基準\`
 - 「スタートアップとしての事業立ち上げ評価」では、以下の形式で記述してください。
-    - `**評価： {score}/10**`
-    - `**結論： {text}**`
+    - \`**評価： {score}/10**\`
+    - \`**結論： {text}**\`
 - 「評価基準」のセクションでは、上記の「具体的なタスク」内に記載されている評価基準の全文をそのまま出力してください。
 
 ---
@@ -232,7 +241,7 @@
                 promptOutput.textContent = finalPrompt;
                 if(outputSection.classList.contains('hidden')) {
                     outputSection.classList.remove('hidden');
-                    // 初回生成時のみアニメーション
+                    // Animate only on first generation
                     outputSection.classList.add('fade-in');
                 }
                 outputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -289,21 +298,6 @@
             
             document.body.removeChild(textArea);
         }
-
-        // Add shake animation style dynamically
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes shake {
-                10%, 90% { transform: translateX(-1px); }
-                20%, 80% { transform: translateX(2px); }
-                30%, 50%, 70% { transform: translateX(-4px); }
-                40%, 60% { transform: translateX(4px); }
-            }
-            .animate-shake {
-                animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>

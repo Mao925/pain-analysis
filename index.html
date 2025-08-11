@@ -147,9 +147,9 @@
         const copyBtn = document.getElementById('copyBtn');
         const messageBox = document.getElementById('messageBox');
 
+        // FIX: The backticks (`) inside the template literal were not escaped, causing a JavaScript syntax error.
+        // I have escaped them with a backslash (\`) so the script can parse correctly.
         const promptTemplate = `
-
-
 # 役割 (Role)
 あなたは、世界トップクラスのスタートアップアナリスト兼マーケットリサーチャーです。あなたの使命は、提示された社会問題が、スタートアップとして取り組むに値するビジネスチャンスとなり得るかを、客観的かつ厳密に評価することです。社会的意義だけでなく、事業としての持続可能性と成長性を重視した、鋭い洞察を提供してください。
 
@@ -202,13 +202,13 @@
 
 # 出力形式 (Format)
 - 以下の3つの見出しをマークダウン形式（##）で必ず使用してください。
-    - `## ペインの深さ`
-    - `## 市場規模・成長性`
-    - `## スタートアップとしての事業立ち上げ評価`
+    - \`## ペインの深さ\`
+    - \`## 市場規模・成長性\`
+    - \`## スタートアップとしての事業立ち上げ評価\`
 - 「スタートアップとしての事業立ち上げ評価」では、以下の形式で記述してください。
-    - `**評価： {score}/10**`
-    - `**結論： {text}**`
-    - `理由： {text}`
+    - \`**評価： {score}/10**\`
+    - \`**結論： {text}**\`
+    - \`理由： {text}\`
 
 ---
 それでは、準備はよろしいですか？以下の【問題】について、分析を開始してください。
@@ -239,11 +239,14 @@
 
         copyBtn.addEventListener('click', () => {
             const textToCopy = promptOutput.textContent;
+            // Use modern clipboard API if available and in a secure context
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(showCopyMessage).catch(err => {
+                    // Fallback for browsers that might fail for various reasons
                     fallbackCopyTextToClipboard(textToCopy);
                 });
             } else {
+                // Fallback for older browsers or insecure contexts
                 fallbackCopyTextToClipboard(textToCopy);
             }
         });
@@ -260,20 +263,26 @@
         function fallbackCopyTextToClipboard(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
+            
+            // Avoid scrolling to bottom
             textArea.style.position = "fixed";
             textArea.style.top = "-9999px";
             textArea.style.left = "-9999px";
+            
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
+            
             try {
                 if(document.execCommand('copy')) showCopyMessage();
             } catch (err) {
-                console.error('フォールバックコピーに失敗: ', err);
+                console.error('Fallback copy failed: ', err);
             }
+            
             document.body.removeChild(textArea);
         }
 
+        // Add shake animation style dynamically
         const style = document.createElement('style');
         style.innerHTML = `
             @keyframes shake {
